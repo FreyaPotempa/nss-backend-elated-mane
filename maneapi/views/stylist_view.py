@@ -3,6 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from django.contrib.auth.models import User
+from ..models import Customer
 
 """
 Users (un:pwd)
@@ -45,7 +46,6 @@ class StylistView(ViewSet):
         serialized = StylistSerializer(stylist)
         return Response(serialized.data)
 
-
     def list(self, request):
         """Handle GET requests to stylists resource
 
@@ -57,10 +57,20 @@ class StylistView(ViewSet):
         return Response(serialized.data)
 
 
+class StylistClientSerializer(serializers.ModelSerializer):
+    '''JSON serializer for clients of stylist'''
+
+    class Meta:
+        model = Customer
+        fields = ('id', 'name',)
+
+
 class StylistSerializer(serializers.ModelSerializer):
     """JSON serializer for stylist creator"""
-
+    clients = StylistClientSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'username',)
+        fields = ('id', 'first_name', 'last_name',
+                  'email', 'username', 'clients',)
+        depth = 1

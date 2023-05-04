@@ -37,7 +37,6 @@ class CustomerView(ViewSet):
         serialized = CustomerSerializer(customer)
         return Response(serialized.data)
 
-
     def list(self, request):
         """Handle GET requests to customers resource
 
@@ -66,8 +65,8 @@ class CustomerView(ViewSet):
 class CustomerSerializer(serializers.ModelSerializer):
     """JSON serializer for customer creator"""
 
-
     class Meta:
         """JSON serializer for customer creator"""
         model = Customer
-        fields = ('id', 'stylist', 'name', 'date_created',)
+        fields = ('id', 'stylist', 'name', 'style',
+                  'date_created', 'appointments',)
